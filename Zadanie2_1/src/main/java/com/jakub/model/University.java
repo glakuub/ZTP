@@ -1,9 +1,10 @@
 package com.jakub.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class University {
+public class University implements Cloneable, Serializable {
     private String name;
     private ArrayList<Faculty> faculties;
     private static String NAME_PREFIX = "University ";
@@ -46,6 +47,7 @@ public class University {
         University university;
         try{
             university = (University) super.clone();
+            university.faculties = new ArrayList<>();
         }catch (CloneNotSupportedException e){
             university = new University(this.name);
         }
@@ -53,5 +55,20 @@ public class University {
             university.faculties.add((Faculty)faculty.clone());
         }
         return university;
+    }
+
+    public boolean isDeepCopy(University university){
+        if(this == university || this.faculties == university.faculties){
+            return false;
+        }else{
+            if(this.faculties.size() == university.faculties.size()){
+                for (int i = 0; i < this.faculties.size(); i++) {
+                    if(!this.faculties.get(i).isDeepCopy(university.faculties.get(i)))
+                        return false;
+                }
+            }
+        }
+
+        return this.name.equals(university.name);
     }
 }

@@ -1,8 +1,10 @@
 package com.jakub.model;
 
+import java.io.Serializable;
+import java.util.Objects;
 import java.util.Random;
 
-class Student implements Cloneable {
+class Student implements Cloneable, Serializable {
 
     private int id;
     private static Random random;
@@ -37,5 +39,9 @@ class Student implements Cloneable {
         } catch (CloneNotSupportedException e){
             return new Student(this.id);
         }
+    }
+
+    public boolean isDeepCopy(Student student){
+        return !(this == student) && (this.id == student.id);
     }
 }

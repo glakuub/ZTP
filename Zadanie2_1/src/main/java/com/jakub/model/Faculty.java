@@ -1,10 +1,12 @@
 package com.jakub.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-public class Faculty {
+public class Faculty implements Cloneable, Serializable {
 
     private String name;
     private ArrayList<Student> students;
@@ -50,13 +52,33 @@ public class Faculty {
         Faculty faculty;
         try{
             faculty = (Faculty) super.clone();
+            faculty.students = new ArrayList<>();
         }catch (CloneNotSupportedException e){
             faculty = new Faculty(this.name);
         }
 
-        for(Student student : students){
-            faculty.students.add((Student)student.clone());
+        for (int i = 0; i < this.students.size() ; i++) {
+            faculty.students.add((Student)this.students.get(i).clone());
         }
         return faculty;
     }
+
+    public boolean isDeepCopy(Faculty faculty){
+        if(this == faculty || this.students == faculty.students)
+            return false;
+        else{
+            if(this.students.size()==faculty.students.size()){
+                for (int i = 0; i < this.students.size() ; i++) {
+                    if(!this.students.get(i).isDeepCopy(faculty.students.get(i))){
+                        return false;
+                    }
+                }
+            }
+
+            return this.name.equals(faculty.name);
+        }
+
+    }
+
+
 }
