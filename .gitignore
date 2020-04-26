@@ -25,6 +25,7 @@ hs_err_pid*
 #docs
 *.docx
 *.pdf
+*.xlsx
 
 #temp files
 *.tmp
