@@ -13,6 +13,7 @@ public class Main {
 
         var btf = new BloodTypeFactory();
         var patientList = new ArrayList<Patient>();
+
         patientList.add(new Patient.Builder("jan","kowalski").bloodType(btf.get("0rh+")).build());
         patientList.add(new Patient.Builder("adam","nowak").bloodType(btf.get("0rh+")).dateOfBirth(Date.from(Instant.now())).build());
         patientList.add(new Patient.Builder("jan","nowak").build());
@@ -21,7 +22,11 @@ public class Main {
 
         var tbt = btf.get("ABrh+");
         var tbt2 = btf.get("ABrh+");
+
+        System.out.println("\nTest na równość referencji:");
         System.out.println(tbt == tbt2);
+
+        System.out.println("\nReprezentacja obiektów:");
         System.out.println(tbt);
         System.out.println(tbt2);
     }

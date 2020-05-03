@@ -6,7 +6,9 @@ public class BloodType {
         this.symbol = symbol;
     }
 
-    public String getSymbol() {return symbol;}
+    public String getSymbol() {
+        return symbol;
+    }
 
     @Override
     public String toString() {

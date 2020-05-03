@@ -8,6 +8,7 @@ public class Patient {
     private String lastName;
     private Date dateOfBirth;
     private BloodType bloodType;
+
     private Patient(Builder builder){
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
