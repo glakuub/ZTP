@@ -168,15 +168,16 @@ public class CodeGenerator {
     private String createBuilderString(ClassDefinition classDefinition){
         var stringBuilder = new StringBuilder();
         var classAttributes = classDefinition.getAttributes();
-        stringBuilder.append(TAB + PUBLIC_MODIFIER + SPACE + CLASS_HEADER + BUILDER);
+
+        stringBuilder.append(StringMethods.concat(TAB,PUBLIC_MODIFIER,SPACE,CLASS_HEADER,BUILDER));
         stringBuilder.append(DEFINITION_OPEN);
         stringBuilder.append(NEWLINE);
 
         classAttributes.forEach(attribute -> {
-            stringBuilder.append( TAB + PRIVATE_MODIFIER + SPACE + attribute.getType() + SPACE + attribute.getName()+ SEMICOLON + NEWLINE);
+            stringBuilder.append(StringMethods.concat(TAB,TAB,PRIVATE_MODIFIER,SPACE,attribute.getType(),SPACE,attribute.getName(),SEMICOLON,NEWLINE));
         });
 
-        stringBuilder.append(TAB + BUILDER_CONSTRUCTOR);
+        stringBuilder.append(StringMethods.concat(TAB,TAB,BUILDER_CONSTRUCTOR));
         stringBuilder.append(NEWLINE);
 
         classAttributes.forEach(attribute -> {
@@ -196,8 +197,8 @@ public class CodeGenerator {
         stringBuilder.append(StringMethods.concat(BUILDER, SPACE,BUILDER_ARG,CLOSE_BRACKET,DEFINITION_OPEN,NEWLINE));
 
 
-        var attributest= classDefinition.getAttributes();
-        attributest.forEach(attribute -> {
+        var attributes= classDefinition.getAttributes();
+        attributes.forEach(attribute -> {
             stringBuilder.append(StringMethods.concat(TAB,TAB,THIS_DOT,attribute.getName(),EQUALS_SIGN));
             stringBuilder.append(StringMethods.concat(BUILDER_ARG,DOT,attribute.getName(),SEMICOLON,NEWLINE));
         });

@@ -26,7 +26,7 @@ public class JavaFilesGenerator {
             bw.write(string);
 
         }catch (IOException e){
-
+            System.out.println(e.getMessage());
         }
     }
 }
