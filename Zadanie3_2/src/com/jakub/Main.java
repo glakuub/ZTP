@@ -8,10 +8,11 @@ public class Main {
         var parser = new Parser();
 
         try {
-            var classDef = parser.createClassDefinition("class test,wiek:String='Adam' setter getter; pieniadze:float='1.5',");
+            var classDef = parser.createClassDefinition("class Test,wiek:String='Adam' setter getter; pieniadze:float='1.5',builder singleton");
 
-            var generator = new CodeGenerator();
-            System.out.println(generator.createClassString(classDef));
+            var generator = new JavaFilesGenerator();
+            generator.createClassFile(classDef);
+
         } catch (InvalidClassDefinitionStringException e) {
             e.printStackTrace();
         }

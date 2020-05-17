@@ -34,16 +34,25 @@ public class Parser {
         try {
             classDefinition.setName(extractClassName(definitionParts[0]));
         }catch (IllegalArgumentException iae){
-            throw new InvalidClassDefinitionStringException();
+            throw new InvalidClassDefinitionStringException("Incorrect class name definition.");
         }
 
-        try {
-            classDefinition.setAttributes(extractAttributes(definitionParts[1]));
-        }catch (IllegalArgumentException iae){
-            throw new InvalidClassDefinitionStringException();
-        }
+        if(definitionParts.length > 1) {
+            try {
+                classDefinition.setAttributes(extractAttributes(definitionParts[1]));
+            } catch (IllegalArgumentException iae) {
+                throw new InvalidClassDefinitionStringException("Incorrect attributes definition.");
+            }
 
-        return classDefinition;
+            if(definitionParts.length > 2) {
+                try {
+                    classDefinition.setDesignPatterns(extractDesignPatterns(definitionParts[2]));
+                } catch (IllegalArgumentException iae) {
+                    throw new InvalidClassDefinitionStringException("Incorrect design patterns definition.");
+                }
+            }
+        }
+            return classDefinition;
 
 
     }
@@ -147,5 +156,20 @@ public class Parser {
 
     }
 
+    private List<DesignPattern> extractDesignPatterns(String classDefinitionDesignPatternsPart){
+        if(classDefinitionDesignPatternsPart == null)
+            throw new IllegalArgumentException();
+
+        var designPatternsStrings = classDefinitionDesignPatternsPart.split(SPACE);
+        var patternsList = new ArrayList<DesignPattern>();
+
+        Arrays.stream(designPatternsStrings).forEach(patternString -> {
+
+                patternsList.add(Enum.valueOf(DesignPattern.class, patternString));
+
+        });
+
+        return patternsList;
+    }
 
 }

@@ -12,6 +12,7 @@ public class CodeGenerator {
     private static final String SPACE=" ";
     private static final String EQUALS_SIGN="=";
     private static final String SEMICOLON=";";
+    private static final String DOT=".";
     private static final String NEWLINE="\n";
     private static final String SETTER_PREFIX="set";
     private static final String GETTER_PREFIX="get";
@@ -19,8 +20,17 @@ public class CodeGenerator {
     private static final String CLOSE_BRACKET=")";
     private static final String VOID="void";
     private static final String THIS_DOT="this.";
+    private static final String THIS="this";
     private static final String RETURN="return";
     private static final String TAB="\t";
+    private static final String FINAL_MODIFIER="final";
+    private static final String STATIC_MODIFIER="static";
+    private static final String INSTANCE="INSTANCE";
+    private static final String NEW="new";
+    private static final String BUILDER="Builder";
+    private static final String BUILDER_ARG="builder";
+    private static final String BUILDER_CONSTRUCTOR="public Builder(){}";
+    private static final String VAL="val";
 
 
 
@@ -37,6 +47,22 @@ public class CodeGenerator {
         stringBuilder.append(DEFINITION_OPEN);
         stringBuilder.append(NEWLINE);
 
+        var designPatterns = classDefinition.getDesignPatterns();
+        if(designPatterns.contains(DesignPattern.singleton)){
+            var instanceLine = createStaticInstanceLine(classDefinition);
+            stringBuilder.append(TAB + instanceLine);
+            stringBuilder.append(NEWLINE);
+
+            var privateConstructorLine = createPrivateConstructorLine(classDefinition);
+            stringBuilder.append(TAB + privateConstructorLine);
+            stringBuilder.append(NEWLINE);
+        }
+
+        if(designPatterns.contains(DesignPattern.builder)){
+            var builderConstructorLine = createBuilderConstructorLine(classDefinition);
+            stringBuilder.append(builderConstructorLine);
+            stringBuilder.append(NEWLINE);
+        }
 
         var attributes = classDefinition.getAttributes();
         attributes.forEach(attribute ->
@@ -61,6 +87,13 @@ public class CodeGenerator {
 
                 }
         );
+
+
+        if(designPatterns.contains(DesignPattern.builder)){
+            var builderString = createBuilderString(classDefinition);
+            stringBuilder.append(builderString);
+            stringBuilder.append(NEWLINE);
+        }
 
         stringBuilder.append(DEFINITION_CLOSE);
 
@@ -123,5 +156,58 @@ public class CodeGenerator {
         builder.append(NEWLINE);
         return builder.toString();
     }
+    private String createStaticInstanceLine(ClassDefinition classDefinition){
+        return PUBLIC_MODIFIER + SPACE + FINAL_MODIFIER + SPACE + STATIC_MODIFIER
+                + SPACE + classDefinition.getName() + SPACE + INSTANCE + SPACE + EQUALS_SIGN
+                + SPACE + NEW + SPACE + classDefinition.getName()+OPEN_BRACKET+CLOSE_BRACKET+SEMICOLON;
+    }
+    private String createPrivateConstructorLine(ClassDefinition classDefinition){
+        return PRIVATE_MODIFIER + SPACE + classDefinition.getName() + SPACE
+                + OPEN_BRACKET + CLOSE_BRACKET + DEFINITION_OPEN + DEFINITION_CLOSE;
+    }
+    private String createBuilderString(ClassDefinition classDefinition){
+        var stringBuilder = new StringBuilder();
+        var classAttributes = classDefinition.getAttributes();
+        stringBuilder.append(TAB + PUBLIC_MODIFIER + SPACE + CLASS_HEADER + BUILDER);
+        stringBuilder.append(DEFINITION_OPEN);
+        stringBuilder.append(NEWLINE);
+
+        classAttributes.forEach(attribute -> {
+            stringBuilder.append( TAB + PRIVATE_MODIFIER + SPACE + attribute.getType() + SPACE + attribute.getName()+ SEMICOLON + NEWLINE);
+        });
+
+        stringBuilder.append(TAB + BUILDER_CONSTRUCTOR);
+        stringBuilder.append(NEWLINE);
+
+        classAttributes.forEach(attribute -> {
+            stringBuilder.append(TAB + TAB + PUBLIC_MODIFIER + SPACE + BUILDER + SPACE + attribute.getName() + OPEN_BRACKET
+                                    + attribute.getType() + SPACE + VAL + CLOSE_BRACKET + DEFINITION_OPEN + NEWLINE
+                                    + TAB + TAB + TAB + attribute.getName() + EQUALS_SIGN + VAL + SEMICOLON + SPACE
+                                    + RETURN + SPACE + THIS + SEMICOLON + NEWLINE + TAB + TAB + DEFINITION_CLOSE + NEWLINE);
+        });
+        stringBuilder.append(TAB + DEFINITION_CLOSE);
+
+        return stringBuilder.toString();
+    }
+    private String createBuilderConstructorLine(ClassDefinition classDefinition){
+        var stringBuilder = new StringBuilder();
+
+        stringBuilder.append(StringMethods.concat(TAB,PUBLIC_MODIFIER,SPACE,classDefinition.getName(),OPEN_BRACKET));
+        stringBuilder.append(StringMethods.concat(BUILDER, SPACE,BUILDER_ARG,CLOSE_BRACKET,DEFINITION_OPEN,NEWLINE));
+
+
+        var attributest= classDefinition.getAttributes();
+        attributest.forEach(attribute -> {
+            stringBuilder.append(StringMethods.concat(TAB,TAB,THIS_DOT,attribute.getName(),EQUALS_SIGN));
+            stringBuilder.append(StringMethods.concat(BUILDER_ARG,DOT,attribute.getName(),SEMICOLON,NEWLINE));
+        });
+
+        stringBuilder.append(StringMethods.concat(TAB, DEFINITION_CLOSE));
+
+        return stringBuilder.toString();
+
+    }
+
+
 
 }
