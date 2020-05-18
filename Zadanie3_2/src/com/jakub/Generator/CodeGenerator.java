@@ -1,6 +1,8 @@
-package com.jakub;
+package com.jakub.Generator;
 
-import javax.swing.plaf.ButtonUI;
+import com.jakub.Generator.Model.ClassDefinition;
+import com.jakub.Generator.Model.DesignPattern;
+import com.jakub.Util.StringMethods;
 
 public class CodeGenerator {
 
@@ -29,6 +31,7 @@ public class CodeGenerator {
     private static final String NEW="new";
     private static final String BUILDER="Builder";
     private static final String BUILDER_ARG="builder";
+    private static final String BUILD="Build";
     private static final String BUILDER_CONSTRUCTOR="public Builder(){}";
     private static final String VAL="val";
 
@@ -186,7 +189,8 @@ public class CodeGenerator {
                                     + TAB + TAB + TAB + attribute.getName() + EQUALS_SIGN + VAL + SEMICOLON + SPACE
                                     + RETURN + SPACE + THIS + SEMICOLON + NEWLINE + TAB + TAB + DEFINITION_CLOSE + NEWLINE);
         });
-        stringBuilder.append(TAB + DEFINITION_CLOSE);
+        stringBuilder.append(createBuilderBuildMethodString(classDefinition));
+        stringBuilder.append(StringMethods.concat(NEWLINE,TAB,DEFINITION_CLOSE));
 
         return stringBuilder.toString();
     }
@@ -209,6 +213,13 @@ public class CodeGenerator {
 
     }
 
+    private String createBuilderBuildMethodString(ClassDefinition classDefinition){
+        var builder = new StringBuilder();
+        builder.append(StringMethods.concat(TAB,TAB,PUBLIC_MODIFIER,SPACE, classDefinition.getName(),SPACE,BUILD,OPEN_BRACKET,CLOSE_BRACKET));
+        builder.append(StringMethods.concat(DEFINITION_OPEN,NEWLINE,TAB,TAB,TAB,RETURN,SPACE,NEW,SPACE,classDefinition.getName()));
+        builder.append(StringMethods.concat(OPEN_BRACKET,THIS,CLOSE_BRACKET,SEMICOLON,NEWLINE,TAB,TAB,DEFINITION_CLOSE));
 
+        return builder.toString();
+    }
 
 }

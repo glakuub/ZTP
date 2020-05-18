@@ -1,5 +1,8 @@
-package com.jakub;
+package com.jakub.Generator;
 
+import com.jakub.Generator.Model.Attribute;
+import com.jakub.Generator.Model.ClassDefinition;
+import com.jakub.Generator.Model.DesignPattern;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -23,7 +26,7 @@ public class Parser {
     private static final String CHAR="char";
 
 
-    public ClassDefinition createClassDefinition(String classDefinitionString) throws InvalidClassDefinitionStringException{
+    public ClassDefinition createClassDefinition(String classDefinitionString) throws InvalidClassDefinitionStringException {
         if(classDefinitionString == null)
             throw new IllegalArgumentException();
 
@@ -32,21 +35,21 @@ public class Parser {
         var classDefinition = new ClassDefinition();
 
         try {
-            classDefinition.setName(extractClassName(definitionParts[0]));
+            classDefinition.setName(extractClassName(definitionParts[0].trim()));
         }catch (IllegalArgumentException iae){
             throw new InvalidClassDefinitionStringException("Incorrect class name definition.");
         }
 
         if(definitionParts.length > 1) {
             try {
-                classDefinition.setAttributes(extractAttributes(definitionParts[1]));
+                classDefinition.setAttributes(extractAttributes(definitionParts[1].trim()));
             } catch (IllegalArgumentException iae) {
                 throw new InvalidClassDefinitionStringException("Incorrect attributes definition.");
             }
 
             if(definitionParts.length > 2) {
                 try {
-                    classDefinition.setDesignPatterns(extractDesignPatterns(definitionParts[2]));
+                    classDefinition.setDesignPatterns(extractDesignPatterns(definitionParts[2].trim()));
                 } catch (IllegalArgumentException iae) {
                     throw new InvalidClassDefinitionStringException("Incorrect design patterns definition.");
                 }
@@ -94,7 +97,7 @@ public class Parser {
         if(attributeString == null)
             throw new IllegalArgumentException();
 
-        var attributeDefinitionParts = attributeString.split(COLON);
+        var attributeDefinitionParts = attributeString.trim().split(COLON);
 
         if(attributeDefinitionParts.length != 2)
             throw new IllegalArgumentException();

@@ -1,4 +1,4 @@
-package com.jakub;
+package com.jakub.Generator.Model;
 
 public class Attribute {
     private String name;

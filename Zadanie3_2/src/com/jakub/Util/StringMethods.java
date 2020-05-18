@@ -1,4 +1,4 @@
-package com.jakub;
+package com.jakub.Util;
 
 public class StringMethods {
 

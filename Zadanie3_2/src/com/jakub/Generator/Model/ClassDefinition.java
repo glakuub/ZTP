@@ -1,4 +1,4 @@
-package com.jakub;
+package com.jakub.Generator.Model;
 
 import java.util.ArrayList;
 import java.util.List;

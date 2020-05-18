@@ -1,4 +1,4 @@
-package com.jakub;
+package com.jakub.Generator;
 
 public class InvalidClassDefinitionStringException extends Exception {
 
